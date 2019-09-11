@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: managers
@@ -18,18 +16,17 @@
 #  unconfirmed_email      :string
 #
 
-class Manager < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable, :confirmable
+FactoryBot.define do
+  password = Faker::Internet.password(min_length: 6)
 
-  has_one :bar, dependent: :destroy
-  has_many :beer_lists, through: :bar
+  factory :manager do
+    email { Faker::Internet.email }
+    password { password }
+    password_confirmation { password }
+    confirmed_at { Time.now }
 
-  protected
-
-  def send_devise_notification(notification, *args)
-    devise_mailer.send(notification, self, *args).deliver_later
+    trait :not_confirmed do
+      confirmed_at { nil }
+    end
   end
 end

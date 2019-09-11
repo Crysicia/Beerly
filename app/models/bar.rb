@@ -1,11 +1,10 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: bars
 #
-#  id           :bigint(8)        not null, primary key
-#  manager_id   :bigint(8)
+#  id           :bigint           not null, primary key
+#  manager_id   :bigint
 #  name         :string
 #  address      :text
 #  photo        :string
@@ -17,6 +16,7 @@
 #  state        :boolean          default(FALSE)
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
+#  siret        :decimal(14, )
 #
 
 class Bar < ApplicationRecord
@@ -29,6 +29,7 @@ class Bar < ApplicationRecord
   scope :up, -> { where(state: true) }
   scope :down, -> { where(state: false) }
 
+  # 💩 Useless validation, to remove
   validates :manager_id, presence: true, uniqueness: true
 
   # Geocoding
@@ -38,7 +39,8 @@ class Bar < ApplicationRecord
   validates :name, presence: true
   validates :address, presence: true
   validates :siret, presence: true
-  validate :siret_is_valid?
+  # 💩 Crappy validation, to improve
+  # validate :siret_is_valid?
   pg_search_scope :search_by_beer,
                   associated_against: {
                     beers: [:name]

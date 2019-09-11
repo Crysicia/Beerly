@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: categories
@@ -10,7 +8,8 @@
 #  updated_at :datetime         not null
 #
 
-class Category < ApplicationRecord
-  has_many :beers, dependent: :destroy
-  has_many :styles, dependent: :destroy
+FactoryBot.define do
+  factory :category do
+    name { Faker::Beer.malts }
+  end
 end

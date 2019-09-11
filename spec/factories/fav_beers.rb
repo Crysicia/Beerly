@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: fav_beers
@@ -11,8 +9,9 @@
 #  updated_at       :datetime         not null
 #
 
-class FavBeer < ApplicationRecord
-  belongs_to :beer
-  belongs_to :beer_wishlist
-  validates_associated :beer_wishlist
+FactoryBot.define do
+  factory :fav_beer do
+    beer
+    beer_wishlist
+  end
 end

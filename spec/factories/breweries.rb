@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: breweries
@@ -12,6 +10,14 @@
 #  updated_at :datetime         not null
 #
 
-class Brewery < ApplicationRecord
-  has_many :beers, dependent: :destroy
+FactoryBot.define do
+  factory :brewery do
+    name { Faker::Beer.brand }
+    verified { false }
+    image_url { Faker::Avatar.image }
+
+    trait :verified do
+      verified { true }
+    end
+  end
 end

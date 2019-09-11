@@ -1,8 +1,6 @@
-# frozen_string_literal: true
-
 # == Schema Information
 #
-# Table name: managers
+# Table name: users
 #
 #  id                     :bigint           not null, primary key
 #  email                  :string           default(""), not null
@@ -16,20 +14,28 @@
 #  confirmed_at           :datetime
 #  confirmation_sent_at   :datetime
 #  unconfirmed_email      :string
+#  provider               :string
+#  uid                    :string
 #
 
-class Manager < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable, :confirmable
+OAUTH_PROVIDERS = ['google_oauth2', 'facebook']
 
-  has_one :bar, dependent: :destroy
-  has_many :beer_lists, through: :bar
+FactoryBot.define do
+  password = Faker::Internet.password(min_length: 6)
 
-  protected
+  factory :user do
+    email { Faker::Internet.email }
+    password { password }
+    password_confirmation { password }
+    confirmed_at { Time.now }
 
-  def send_devise_notification(notification, *args)
-    devise_mailer.send(notification, self, *args).deliver_later
+    trait :not_confirmed do
+      confirmed_at { nil }
+    end
+
+    trait :from_oauth do
+      provider { OAUTH_PROVIDERS.sample }
+      uid { Faker::Number.number(digits: 21) }
+    end
   end
 end

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: bar_wishlists
@@ -12,12 +10,15 @@
 #  updated_at :datetime         not null
 #
 
-class BarWishlist < ApplicationRecord
-  scope :visited, -> { where(is_visited: true) }
-  scope :to_visit, -> { where(is_visited: false) }
+FactoryBot.define do
+  factory :bar_wishlist do
+    is_visited { false }
+    
+    bar
+    user
 
-  belongs_to :bar
-  belongs_to :user
-
-  validates :bar_id, presence: true, uniqueness: { scope: :user_id }
+    trait :visited do
+      is_visited { true }
+    end
+  end
 end

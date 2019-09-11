@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: beer_lists
@@ -15,13 +13,19 @@
 #  is_archived     :boolean          default(FALSE)
 #
 
-class BeerList < ApplicationRecord
-  scope :archived, -> { where(is_archived: true) }
-  scope :up, -> { where(is_archived: false) }
-  scope :draft, -> { where(bottle_price: nil) }
-  scope :bottle, -> { where(pint_price: nil) }
 
-  belongs_to :beer
-  belongs_to :bar
-  has_one :manager, through: :bar
+FactoryBot.define do
+  factory :beer_list do
+    pint_price { (rand * 10).round(2) }
+    half_pint_price { (rand * 5).round(2) }
+    bottle_price { (rand * 5).round(2) }
+    is_archived { false }
+
+    beer
+    bar
+
+    trait :archived do
+      is_archived { true }
+    end
+  end
 end
